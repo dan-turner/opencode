@@ -85,6 +85,7 @@ Or you can set it up manually.
 - `agent`: The agent to use. Must be a primary agent. Falls back to `default_agent` from config or `"build"` if not found.
 - `share`: Whether to share the OpenCode session. Defaults to **true** for public repositories.
 - `prompt`: Optional custom prompt to override the default behavior. Use this to customize how OpenCode processes requests.
+- `allowed_bots`: Comma-separated list of bot usernames allowed to trigger the action, or `*` to allow all bots. Bots are denied by default. Names are case-insensitive and may include or omit the `[bot]` suffix.
 - `token`: Optional GitHub access token for performing operations such as creating comments, committing changes, and opening pull requests. By default, OpenCode uses the installation access token from the OpenCode GitHub App, so commits, comments, and pull requests appear as coming from the app.
 
   Alternatively, you can use the GitHub Action runner's [built-in `GITHUB_TOKEN`](https://docs.github.com/en/actions/tutorials/authenticate-with-github_token) without installing the OpenCode GitHub App. Just make sure to grant the required permissions in your workflow:
@@ -98,6 +99,17 @@ Or you can set it up manually.
   ```
 
   You can also use a [personal access tokens](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens)(PAT) if preferred.
+
+To allow an OpenCode GitHub App to trigger the action for issues or comments it creates, configure its bot username:
+
+```yaml
+- uses: anomalyco/opencode/github@latest
+  with:
+    model: anthropic/claude-sonnet-4-20250514
+    allowed_bots: opencode-agent
+```
+
+Only allow bots you trust. An allowed bot's issue or comment content is treated as an authorized prompt, and GitHub App bots bypass the repository collaborator permission check because GitHub reports their collaborator permission as `none`.
 
 ---
 
